@@ -27,7 +27,7 @@ body {
 
   /* Sprite background */
   background-repeat: no-repeat;
-  background-position: 0px 0px;
+  background-size: 144px 24px;
 
   /* If you want it bigger on screen without blurring */
   scale: 3;            /* change to 1,2,3,4 as needed */

@@ -49,16 +49,17 @@ body {
 <body>
 
 <div class="Chicken" id="chicken">
-  <img id="right" src="chicken-right.png" />
-  <img id="left"  src="chicken-left.png" style="display:none;" />
+  <img id="right" src="chicken-right.png" alt="chicken right"/>
+  <img id="left"  src="chicken-left.png"  style="display:none;" alt="chicken left"/>
 </div>
+
 <script>
 const chicken = document.getElementById("chicken");
 const rightSprite = document.getElementById("right");
 const leftSprite = document.getElementById("left");
 
 const size = 24 * 3;
-const WALK_SPEED = 3; // 👈 slow cozy waddle (pixels per frame)
+const WALK_SPEED = 3; // slow cozy waddle (pixels per frame)
 
 let x = window.innerWidth / 2;
 let y = window.innerHeight / 2;
@@ -141,8 +142,6 @@ function animate() {
 
 animate();
 </script>
-
-
 
 </body>
 </html>

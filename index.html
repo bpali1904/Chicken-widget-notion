@@ -1,22 +1,148 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pixel Chicken</title>
-  <style>
-    .pixelchick {
-      width: 24px;
-      height: 24px;
-      overflow: hidden;
-    }
-  </style>
-  <link rel="stylesheet" href="./style.css" />
-  <script src="./script.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chicken Widget</title>
+
+<style>
+:root {
+  --chicken-size: 3;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* Chicken container */
+.Chicken {
+  position: absolute;
+  width: calc(24px * var(--chicken-size));
+  height: calc(24px * var(--chicken-size));
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Sprite sheets */
+.Chicken img {
+  position: absolute;
+  width: calc(144px * var(--chicken-size));
+  height: calc(24px * var(--chicken-size));
+  image-rendering: pixelated;
+}
+
+/* Walk animation */
+.walk {
+  animation: walk 0.9s steps(6) infinite;
+}
+
+@keyframes walk {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+</style>
 </head>
+
 <body>
-  <div class="pixelchick">
-    <img class="Chicken-right" src="./chicken-right.png" alt="Chickright" />
-  </div>
+
+<div class="Chicken" id="chicken">
+  <img id="right" src="chicken-right.png" />
+  <img id="left"  src="chicken-left.png" style="display:none;" />
+</div>
+<script>
+const chicken = document.getElementById("chicken");
+const rightSprite = document.getElementById("right");
+const leftSprite = document.getElementById("left");
+
+const size = 24 * 3;
+const WALK_SPEED = 3; // 👈 slow cozy waddle (pixels per frame)
+
+let x = window.innerWidth / 2;
+let y = window.innerHeight / 2;
+
+let targetX = x;
+let targetY = y;
+let moving = false;
+
+/* force idle frame */
+function forceIdle(sprite) {
+  sprite.classList.remove("walk");
+  sprite.style.animation = "none";
+  sprite.style.transform = "translateX(0)";
+  void sprite.offsetHeight; // reflow
+}
+
+/* CLICK → WALK */
+document.addEventListener("click", (e) => {
+  targetX = e.clientX;
+  targetY = e.clientY;
+
+  // face direction
+  if (targetX > x) {
+    rightSprite.style.display = "block";
+    leftSprite.style.display = "none";
+  } else {
+    rightSprite.style.display = "none";
+    leftSprite.style.display = "block";
+  }
+
+  // restart animation cleanly
+  rightSprite.style.animation = "";
+  leftSprite.style.animation = "";
+  rightSprite.classList.add("walk");
+  leftSprite.classList.add("walk");
+
+  moving = true;
+});
+
+/* Clamp */
+function clamp(v, min, max) {
+  return Math.max(min, Math.min(max, v));
+}
+
+/* STOP */
+function stopWalking() {
+  moving = false;
+
+  x = targetX;
+  y = targetY;
+
+  forceIdle(rightSprite);
+  forceIdle(leftSprite);
+}
+
+function animate() {
+  if (moving) {
+    const dx = targetX - x;
+    const dy = targetY - y;
+    const distance = Math.hypot(dx, dy);
+
+    if (distance <= WALK_SPEED) {
+      stopWalking();
+    } else {
+      // normalize direction
+      const nx = dx / distance;
+      const ny = dy / distance;
+
+      x += nx * WALK_SPEED;
+      y += ny * WALK_SPEED;
+    }
+
+    x = clamp(x, 0, window.innerWidth - size);
+    y = clamp(y, 0, window.innerHeight - size);
+  }
+
+  chicken.style.transform = `translate(${x}px, ${y}px)`;
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+
+
 </body>
 </html>

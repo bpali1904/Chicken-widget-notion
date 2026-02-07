@@ -1,28 +1,35 @@
-/* Make the background transparent so it looks nice in Notion */
-:root {
-  color-scheme: light dark;
-}
-
 html, body {
-  margin: 0;
-  padding: 0;
-  background: transparent; /* lets Notion’s page show through */
-}
-
-#widget {
-  width: 100%;
   height: 100%;
-  display: grid;
-  place-items: center;
-  /* A subtle rounded look inside Notion (optional) */
-  border-radius: 8px;
+  margin: 0;
+  overflow: hidden;
 }
 
-/* The canvas is our stage; we’ll scale it crisply */
-#chickenCanvas {
-  image-rendering: pixelated;       /* keeps your 24px pixels crisp */
-  image-rendering: crisp-edges;
+body {
+  position: relative;
+  cursor: crosshair;
   background: transparent;
-  /* Optional: add a faint outline to see the bounds while testing */
-  /* outline: 1px dashed rgba(0,0,0,0.1); */
+}
+
+/* The chicken sprite box */
+#chicken {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24px;
+  height: 24px;
+
+  /* Start centered (optional) */
+  transform: translate(-50%, -50%);
+
+  /* Pixel-perfect scaling/rendering */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+  /* Sprite background */
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+
+  /* If you want it bigger on screen without blurring */
+  scale: 3;            /* change to 1,2,3,4 as needed */
+  transform-origin: top left;
 }
